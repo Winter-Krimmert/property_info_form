@@ -546,7 +546,7 @@ textarea.highlight-next {
         if (types.includes("postal_code")) addressComponents.zip = component.long_name;
       });
 
-      // Use only street portion in address input
+      // Strip city/state/zip from the address field — only use street portion
       const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
       if (street) document.getElementById("address").value = street;
@@ -556,39 +556,7 @@ textarea.highlight-next {
     });
   }
 
-  // Detect if device is mobile
-  function isMobile() {
-    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
-  }
-
-  // Example: Handling form elements to avoid focusing inputs on mobile (to prevent keyboard flicker)
-  window.addEventListener("load", () => {
-    initAutocomplete();
-
-    const form = document.querySelector("form");
-    const formElements = Array.from(form.querySelectorAll('input, select, textarea'));
-
-    formElements.forEach((el, index) => {
-      el.addEventListener('change', () => {
-        const nextElement = formElements[index + 1];
-        if (!nextElement) return;
-
-        // Optional: add highlight effect on next element wrapper or element itself
-        const wrapper = nextElement.closest('.select-wrapper') || nextElement;
-        wrapper.classList.add('highlight-next');
-        setTimeout(() => {
-          wrapper.classList.remove('highlight-next');
-        }, 1500);
-
-        nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Focus next input only if not mobile
-        if ((nextElement.tagName === 'INPUT' || nextElement.tagName === 'TEXTAREA') && !isMobile()) {
-          nextElement.focus();
-        }
-      });
-    });
-  });
+  window.addEventListener("load", initAutocomplete);
 </script>
 
 
