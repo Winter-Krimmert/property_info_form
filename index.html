@@ -212,7 +212,7 @@ select[multiple]::-webkit-scrollbar-thumb {
 
 #gucciSuccess {
   position: fixed;
-  top: -100px;
+  top: 20px; /* starting position, but will be off-screen initially via opacity */
   left: 50%;
   transform: translateX(-50%);
   background-color: #1a1a1a;
@@ -227,11 +227,15 @@ select[multiple]::-webkit-scrollbar-thumb {
   align-items: center;
   gap: 1rem;
   z-index: 9999;
-  transition: top 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 #gucciSuccess.show {
-  top: 20px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
 }
 
 .gucci-icon {
