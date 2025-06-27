@@ -109,21 +109,29 @@ select {
   border-bottom: 2px solid #1B4E4B;
   border-radius: 0;
   padding: 14px 18px;
-  padding-right: 48px; /* Space for custom arrow */
+  padding-right: 48px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-image: url("data:image/svg+xml,%3Csvg width='14' height='10' viewBox='0 0 14 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23269891' d='M7 10L0 0h14z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg fill='%23269891' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
-  background-size: 10px;
+  background-size: 12px;
+  box-shadow: inset 0 -2px 0 transparent;
 }
 
 select:hover,
 select:focus {
   background-color: #161616;
   border-bottom: 2px solid #269891;
-  box-shadow: 0 2px 8px rgba(38, 152, 145, 0.25);
+  box-shadow: inset 0 -2px 0 #269891;
   outline: none;
+}
+select:focus {
+  outline: none;
+  border-bottom: 2px solid #269891;
+  box-shadow:
+    inset 0 -2px 0 #269891,
+    0 0 8px rgba(38, 152, 145, 0.25);
 }
 
 select[multiple] {
@@ -239,6 +247,68 @@ select[multiple]::-webkit-scrollbar-thumb {
   opacity: 0.8;
 }
 
+
+input:hover,
+select:hover,
+textarea:hover {
+  background-color: #161616;
+  border-bottom: 2px solid #269891;
+  box-shadow: inset 0 -2px 0 #269891;
+}
+
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  background-color: #1a1a1a;
+  color: #f2f2f2;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-bottom: 2px solid #1B4E4B;
+  border-radius: 4px;
+  padding: 16px 20px;
+  padding-right: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 1px rgba(38, 152, 145, 0.05);
+}
+
+.select-wrapper select:focus {
+  outline: none;
+  border-bottom: 2px solid #269891;
+  box-shadow: 0 0 8px rgba(38, 152, 145, 0.25);
+}
+
+.custom-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  pointer-events: none;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23269891' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.select-wrapper:hover select,
+.select-wrapper select:focus {
+  background-color: #161616;
+  border-bottom: 2px solid #269891;
+  box-shadow: inset 0 -2px 0 #269891;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
 </style>
 
 
@@ -288,21 +358,24 @@ select[multiple]::-webkit-scrollbar-thumb {
         <option value="4/4 Needs Replacement">4/4 Needs Replacement</option>
       </select>
 
-      <label for="motivation">Seller Motivation Reason</label>
-      <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" multiple required>
-        <option value="Pre-Forclosure">Pre-Forclosure</option>
-        <option value="Divorce">Divorce</option>
-        <option value="Probate">Probate</option>
-        <option value="Tired Landlord">Tired Landlord</option>
-        <option value="Out-Of-State Owner">Out-Of-State Owner</option>
-        <option value="Intrafamily Transfer">Intrafamily Transfer</option>
-        <option value="Empty Nester">Empty Nester</option>
-        <option value="Re-Locating">Re-Locating</option>
-        <option value="Tax Delinquent">Tax Delinquent</option>
-        <option value="Code Violation">Code Violation</option>
-        <option value="Special Situation">Special Situation</option>
-        <option value="None">None</option>
-      </select>
+      <div class="select-wrapper">
+        <label for="motivation">Seller Motivation Reason</label>
+        <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" multiple required>
+          <option value="Pre-Forclosure">Pre-Forclosure</option>
+          <option value="Divorce">Divorce</option>
+          <option value="Probate">Probate</option>
+          <option value="Tired Landlord">Tired Landlord</option>
+          <option value="Out-Of-State Owner">Out-Of-State Owner</option>
+          <option value="Intrafamily Transfer">Intrafamily Transfer</option>
+          <option value="Empty Nester">Empty Nester</option>
+          <option value="Re-Locating">Re-Locating</option>
+          <option value="Tax Delinquent">Tax Delinquent</option>
+          <option value="Code Violation">Code Violation</option>
+          <option value="Special Situation">Special Situation</option>
+          <option value="None">None</option>
+        </select>
+        <span class="custom-arrow"></span>
+      </div>
 
       <label for="timeline">Seller's Timeline to Close</label>
       <select id="timeline" name="Y6p03ARuvxWuRkLNTK5N" required>
