@@ -316,23 +316,23 @@ select[multiple]::-webkit-scrollbar-thumb {
 
 
       <label for="address">Property Address</label>
-      <input type="text" id="address" name="address" placeholder="1234 Main St" required />
+      <input type="text" id="address" name="L6uSX4OaJwa4ySXEhAmt" placeholder="1234 Main St" required />
 
       <label for="city">City</label>
-      <input type="text" id="city" name="city" placeholder="New York" required />
+      <input type="text" id="city" name="sYja8k34jfpwGyDwi5Bu" placeholder="New York" required />
 
       <label for="state">State</label>
-      <input type="text" id="state" name="state" placeholder="NY" maxlength="2" required />
+      <input type="text" id="state" name="ck84husvRnJlN8OzOvZ3" placeholder="NY" maxlength="2" required />
 
       <label for="zipcode">Zip Code</label>
-      <input type="text" id="zipcode" name="zipcode" placeholder="10001" required />
+      <input type="text" id="zipcode" name="itA1VQNW4JQpZwD1Bgdl" placeholder="10001" required />
 
 
       <label for="askingPrice">Asking Price ($)</label>
         <input
         type="text"
         id="askingPrice"
-        name="askingPrice"
+        name="CL2SLg4HtmZ9k6xMIPrK"
         placeholder="350,000"
         required
         inputmode="numeric"
@@ -343,7 +343,7 @@ select[multiple]::-webkit-scrollbar-thumb {
     </form>
   </div>
 
-  <script>
+<script>
   function initAutocomplete() {
     const input = document.getElementById("address");
     const autocomplete = new google.maps.places.Autocomplete(input, {
@@ -355,14 +355,27 @@ select[multiple]::-webkit-scrollbar-thumb {
       const place = autocomplete.getPlace();
       if (!place.address_components) return;
 
-      const addressComponents = {};
+      const addressComponents = {
+        street_number: "",
+        route: "",
+        city: "",
+        state: "",
+        zip: ""
+      };
+
       place.address_components.forEach(component => {
-        const type = component.types[0];
-        if (type === "locality") addressComponents.city = component.long_name;
-        if (type === "administrative_area_level_1") addressComponents.state = component.short_name;
-        if (type === "postal_code") addressComponents.zip = component.long_name;
+        const types = component.types;
+        if (types.includes("street_number")) addressComponents.street_number = component.long_name;
+        if (types.includes("route")) addressComponents.route = component.long_name;
+        if (types.includes("locality")) addressComponents.city = component.long_name;
+        if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
+        if (types.includes("postal_code")) addressComponents.zip = component.long_name;
       });
 
+      // Strip city/state/zip from the address field — only use street portion
+      const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
+
+      if (street) document.getElementById("address").value = street;
       if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
       if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
       if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
@@ -371,6 +384,8 @@ select[multiple]::-webkit-scrollbar-thumb {
 
   window.addEventListener("load", initAutocomplete);
 </script>
+
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
