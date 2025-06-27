@@ -505,17 +505,24 @@ const submitButton = form.querySelector("button[type='submit']");
 
 // Scroll to next input/select on change
 const formElements = Array.from(form.querySelectorAll('input, select, textarea'));
+
 formElements.forEach((el, index) => {
-  // Only auto-scroll after change on INPUT or TEXTAREA (not SELECT)
-  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-    el.addEventListener('change', () => {
-      const nextElement = formElements[index + 1];
-      if (nextElement) {
+  el.addEventListener('change', () => {
+    const nextElement = formElements[index + 1];
+    if (!nextElement) return;
+
+    // Delay scroll for selects to avoid dropdown closing on mobile
+    if (el.tagName === 'SELECT') {
+      setTimeout(() => {
         nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         nextElement.focus();
-      }
-    });
-  }
+      }, 300); // 300ms gives the dropdown time to close naturally
+    } else {
+      // Instant scroll for inputs and textareas
+      nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      nextElement.focus();
+    }
+  });
 });
 
 form.addEventListener("submit", async (e) => {
