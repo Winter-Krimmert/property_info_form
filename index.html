@@ -363,8 +363,10 @@ textarea:hover {
 }
 
 .highlight-next {
-  box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6);
+  box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6) !important;
   transition: box-shadow 0.3s ease;
+  z-index: 1;
+  position: relative;
 }
 
 
@@ -586,20 +588,27 @@ formElements.forEach((el, index) => {
     const nextElement = formElements[index + 1];
     if (!nextElement) return;
 
-    // If nextElement is inside a wrapper, find the actual input/select inside
-    const target = nextElement.closest('.select-wrapper')
-      ? nextElement.closest('.select-wrapper').querySelector('select, input, textarea')
-      : nextElement;
+    // Always find actual input/select/textarea (never apply to wrapper)
+    let target = nextElement;
+    if (nextElement.closest('.select-wrapper')) {
+      target = nextElement.closest('.select-wrapper').querySelector('select, input, textarea');
+    }
 
+    // Apply visual highlight
     if (target) {
+      target.classList.remove('highlight-next'); // remove if already present
+      void target.offsetWidth; // force reflow to restart animation
       target.classList.add('highlight-next');
+
       setTimeout(() => {
         target.classList.remove('highlight-next');
       }, 1500);
     }
 
+    // Smooth scroll to element
     nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+    // Only focus on inputs/textarea, not selects
     if (nextElement.tagName === 'INPUT' || nextElement.tagName === 'TEXTAREA') {
       nextElement.focus();
     }
