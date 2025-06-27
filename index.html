@@ -251,6 +251,21 @@ select[multiple]::-webkit-scrollbar-thumb {
   text-align: center;
 }
 
+#gucciSuccess {
+  position: fixed;
+  top: -100px; /* keep it off-screen */
+  opacity: 0;
+  pointer-events: none;
+  transition: top 0.5s ease, opacity 0.5s ease;
+  z-index: 9999;
+}
+
+#gucciSuccess.show {
+  top: 20px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .gucci-text {
   flex: 1;
   font-size: 1.05rem;
