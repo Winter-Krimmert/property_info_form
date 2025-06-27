@@ -210,18 +210,19 @@ select[multiple]::-webkit-scrollbar-thumb {
   }
 
 
-.success-message {
+#gucciSuccess {
   position: fixed;
   top: -100px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #2ecc71;
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: #1a1a1a;
+  color: #2ecc71;
+  padding: 1.25rem 2rem;
+  border: 1px solid #269891;
+  border-radius: 16px;
   font-size: 1rem;
   font-weight: 500;
+  box-shadow: 0 12px 30px rgba(38, 152, 145, 0.4);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -229,22 +230,36 @@ select[multiple]::-webkit-scrollbar-thumb {
   transition: top 0.5s ease, opacity 0.5s ease;
 }
 
-.success-message.show {
+#gucciSuccess.show {
   top: 20px;
 }
 
-.success-message button {
+.gucci-icon {
+  flex-shrink: 0;
+  stroke: #2ecc71;
+  background: #111;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.gucci-text {
+  flex: 1;
+  font-family: 'Inter', sans-serif;
+  color: #f2f2f2;
+}
+
+#gucciSuccess button {
   all: unset;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
+  color: #ccc;
   cursor: pointer;
-  line-height: 1;
   padding: 0 0.5rem;
   transition: opacity 0.3s ease;
 }
 
-.success-message button:hover {
-  opacity: 0.8;
+#gucciSuccess button:hover {
+  opacity: 0.6;
 }
 
 
@@ -321,10 +336,13 @@ textarea:hover {
       <img src="https://res.cloudinary.com/dcmvpmbsc/image/upload/v1744150928/TME_Mar3.2024_iockmn.jpg" alt="Terra Multa Enterprises Logo" />
     </div>
 
-    <div id="successMessage" class="success-message">
-    <span>✅ Your submission was saved successfully!</span>
-    <button id="closeBanner" aria-label="Close">&times;</button>
-    </div>
+<div id="gucciSuccess" class="gucci-success">
+  <svg class="gucci-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 6L9 17l-5-5" />
+  </svg>
+  <span class="gucci-text">Submission Received — The Future Looks Bright</span>
+  <button id="closeBanner" aria-label="Close">&times;</button>
+</div>
 
     <h2>Property Information</h2>
 
@@ -478,7 +496,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const form = document.querySelector("form");
-const successMessage = document.getElementById("successMessage");
+const successMessage = document.getElementById("gucciSuccess");
 const submitButton = form.querySelector("button[type='submit']");
 
 // Scroll to next input/select on change
@@ -526,8 +544,9 @@ form.addEventListener("submit", async (e) => {
 
     await addDoc(collection(db, "propertySubmissions"), data);
 
-    // Show success banner
-    successMessage.classList.add("show");
+    // Show both success banners
+    gucciSuccess.classList.add("show");
+    document.getElementById("gucciSuccess").classList.add("show");
 
     // Scroll to top so the banner is visible
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -538,16 +557,17 @@ form.addEventListener("submit", async (e) => {
     const closeBannerBtn = document.getElementById("closeBanner");
     if (closeBannerBtn) {
         closeBannerBtn.onclick = () => {
-        successMessage.classList.remove("show");
+        gucciSuccess.classList.remove("show");
         };
     }
 
     // Auto-hide after 4 seconds
     setTimeout(() => {
-        successMessage.classList.remove("show");
-        submitButton.disabled = false;
-        submitButton.textContent = "Submit";
-        form.reset();
+      gucciSuccess.classList.remove("show");
+      document.getElementById("gucciSuccess").classList.remove("show");
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit";
+      form.reset();
     }, 4000);
     } catch (err) {
     console.error("❌ Firebase error:", err);
