@@ -586,10 +586,13 @@ formElements.forEach((el, index) => {
     const nextElement = formElements[index + 1];
     if (!nextElement) return;
 
-    // Add highlight to the next element itself, not the wrapper
-    nextElement.classList.add('highlight-next');
+    // ✅ Try to find a wrapper for selects
+    const wrapper = nextElement.closest('.select-wrapper') || nextElement;
+
+    // ✅ Add highlight to the wrapper (or element if no wrapper)
+    wrapper.classList.add('highlight-next');
     setTimeout(() => {
-      nextElement.classList.remove('highlight-next');
+      wrapper.classList.remove('highlight-next');
     }, 1500);
 
     nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
