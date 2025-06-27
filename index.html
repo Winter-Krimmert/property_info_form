@@ -518,80 +518,45 @@ textarea.highlight-next {
   </div>
 
 <script>
-let autocompleteInProgress = false;
-
-formElements.forEach((el, index) => {
-  el.addEventListener('change', () => {
-    if (autocompleteInProgress) return; // Skip if autocomplete filling
-
-    const nextElement = formElements[index + 1];
-    if (!nextElement) return;
-
-    // Add highlight to next element's wrapper or itself
-    const wrapper = nextElement.closest('.select-wrapper') || nextElement;
-    wrapper.classList.add('highlight-next');
-    setTimeout(() => {
-      wrapper.classList.remove('highlight-next');
-    }, 1500);
-
-    nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    if (nextElement.tagName === 'INPUT' || nextElement.tagName === 'TEXTAREA') {
-      nextElement.focus();
-    }
-  });
-});
-
-function initAutocomplete() {
-  const input = document.getElementById("address");
-  const autocomplete = new google.maps.places.Autocomplete(input, {
-    types: ["address"],
-    componentRestrictions: { country: "us" }
-  });
-
-  autocomplete.addListener("place_changed", () => {
-    autocompleteInProgress = true;
-
-    const place = autocomplete.getPlace();
-    if (!place.address_components) {
-      autocompleteInProgress = false;
-      return;
-    }
-
-    const addressComponents = {
-      street_number: "",
-      route: "",
-      city: "",
-      state: "",
-      zip: ""
-    };
-
-    place.address_components.forEach(component => {
-      const types = component.types;
-      if (types.includes("street_number")) addressComponents.street_number = component.long_name;
-      if (types.includes("route")) addressComponents.route = component.long_name;
-      if (types.includes("locality")) addressComponents.city = component.long_name;
-      if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
-      if (types.includes("postal_code")) addressComponents.zip = component.long_name;
+  function initAutocomplete() {
+    const input = document.getElementById("address");
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ["address"],
+      componentRestrictions: { country: "us" }
     });
 
-    const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (!place.address_components) return;
 
-    if (street) document.getElementById("address").value = street;
-    if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
-    if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
-    if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
+      const addressComponents = {
+        street_number: "",
+        route: "",
+        city: "",
+        state: "",
+        zip: ""
+      };
 
-    // Blur to close keyboard on mobile
-    input.blur();
+      place.address_components.forEach(component => {
+        const types = component.types;
+        if (types.includes("street_number")) addressComponents.street_number = component.long_name;
+        if (types.includes("route")) addressComponents.route = component.long_name;
+        if (types.includes("locality")) addressComponents.city = component.long_name;
+        if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
+        if (types.includes("postal_code")) addressComponents.zip = component.long_name;
+      });
 
-    // Delay resetting autocompleteInProgress to allow user interaction after filling
-    setTimeout(() => {
-      autocompleteInProgress = false;
-    }, 1000);
-  });
-}
+      // Strip city/state/zip from the address field — only use street portion
+      const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-window.addEventListener("load", initAutocomplete);
+      if (street) document.getElementById("address").value = street;
+      if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
+      if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
+      if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
+    });
+  }
+
+  window.addEventListener("load", initAutocomplete);
 </script>
 
 
