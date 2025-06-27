@@ -377,6 +377,15 @@ textarea.highlight-next {
   box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6);
 }
 
+.field-note {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  margin-top: -6px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
 
 </style>
 
@@ -415,7 +424,7 @@ textarea.highlight-next {
         <span class="custom-arrow"></span>
       </div>
 
-      <label for="occupancy">Current Occupancy Status</label>
+      <label for="occupancy">Occupancy Status At Closing</label>
       <select id="occupancy" name="O6LTCZ3cgmqT74TnOlt3" required>
         <option value="" disabled selected>Select an option</option>
         <option value="Vacant">Vacant</option>
@@ -424,16 +433,20 @@ textarea.highlight-next {
         <option value="Special Situation">Special Situation</option>
       </select>
 
-      <label for="fourPoint">4-Point Items</label>
-      <select id="fourPoint" name="angb7OGkUcosjCPZzAoO" required>
-        <option value="" disabled selected>Select an option</option>
-        <option value="None">None</option>
-        <option value="1/4 Needs Replacement">1/4 Needs Replacement</option>
-        <option value="2/4 Needs Replacement">2/4 Needs Replacement</option>
-        <option value="3/4 Needs Replacement">3/4 Needs Replacement</option>
-        <option value="4/4 Needs Replacement">4/4 Needs Replacement</option>
-      </select>
-
+      <div class="form-group">
+        <label for="fourPoint">4-Point Items</label>
+        <div class="field-note">
+          A 4-Point Inspection evaluates the Roof, Electrical, Plumbing, and HVAC systems — often required by insurance companies.
+        </div>
+        <select id="fourPoint" name="angb7OGkUcosjCPZzAoO" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="None">None</option>
+          <option value="1/4 Needs Replacement">1/4 Needs Replacement</option>
+          <option value="2/4 Needs Replacement">2/4 Needs Replacement</option>
+          <option value="3/4 Needs Replacement">3/4 Needs Replacement</option>
+          <option value="4/4 Needs Replacement">4/4 Needs Replacement</option>
+        </select>
+      </div>
 
       <!-- Seller Motivation Reason -->
       <div class="select-wrapper">
@@ -480,15 +493,20 @@ textarea.highlight-next {
       <input type="text" id="zipcode" name="itA1VQNW4JQpZwD1Bgdl" placeholder="10001" required />
 
 
-      <label for="askingPrice">Asking Price ($)</label>
+      <div class="form-group">
+        <label for="askingPrice">Asking Price ($)</label>
+        <div class="field-note">
+          The price you'd like to get for your property — just an estimate is fine.
+        </div>
         <input
-        type="text"
-        id="askingPrice"
-        name="CL2SLg4HtmZ9k6xMIPrK"
-        placeholder="350,000"
-        required
-        inputmode="numeric"
+          type="text"
+          id="askingPrice"
+          name="CL2SLg4HtmZ9k6xMIPrK"
+          placeholder="350,000"
+          required
+          inputmode="numeric"
         />
+      </div>
 
       <!-- Submit -->
       <button type="submit">Submit</button>
