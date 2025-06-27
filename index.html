@@ -367,6 +367,17 @@ textarea:hover {
   transition: box-shadow 0.3s ease;
 }
 
+
+select.highlight-next {
+  box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6);
+}
+
+input.highlight-next,
+textarea.highlight-next {
+  box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6);
+}
+
+
 </style>
 
 
@@ -393,12 +404,16 @@ textarea:hover {
     <form method="POST" action="#">
 
       <!-- Dropdown fields -->
+<!-- Property Still Available -->
       <label for="propertyAvailable">Property Still Available?</label>
-      <select id="propertyAvailable" name="x5aC8QnBTJkXLgQBtYXD" required>
-        <option value="" disabled selected>Select an option</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-      </select>
+      <div class="select-wrapper">
+        <select id="propertyAvailable" name="x5aC8QnBTJkXLgQBtYXD" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <span class="custom-arrow"></span>
+      </div>
 
       <label for="occupancy">Current Occupancy Status</label>
       <select id="occupancy" name="O6LTCZ3cgmqT74TnOlt3" required>
@@ -419,23 +434,25 @@ textarea:hover {
         <option value="4/4 Needs Replacement">4/4 Needs Replacement</option>
       </select>
 
+
+      <!-- Seller Motivation Reason -->
       <div class="select-wrapper">
-      <label for="motivation">Seller Motivation Reason</label>
-      <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" required>
-        <option value="" disabled selected>Select an option</option>
-        <option value="Pre-Forclosure">Pre-Forclosure</option>
-        <option value="Divorce">Divorce</option>
-        <option value="Probate">Probate</option>
-        <option value="Tired Landlord">Tired Landlord</option>
-        <option value="Out-Of-State Owner">Out-Of-State Owner</option>
-        <option value="Intrafamily Transfer">Intrafamily Transfer</option>
-        <option value="Empty Nester">Empty Nester</option>
-        <option value="Re-Locating">Re-Locating</option>
-        <option value="Tax Delinquent">Tax Delinquent</option>
-        <option value="Code Violation">Code Violation</option>
-        <option value="Special Situation">Special Situation</option>
-        <option value="None">None</option>
-      </select>
+        <label for="motivation">Seller Motivation Reason</label>
+        <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Pre-Forclosure">Pre-Forclosure</option>
+          <option value="Divorce">Divorce</option>
+          <option value="Probate">Probate</option>
+          <option value="Tired Landlord">Tired Landlord</option>
+          <option value="Out-Of-State Owner">Out-Of-State Owner</option>
+          <option value="Intrafamily Transfer">Intrafamily Transfer</option>
+          <option value="Empty Nester">Empty Nester</option>
+          <option value="Re-Locating">Re-Locating</option>
+          <option value="Tax Delinquent">Tax Delinquent</option>
+          <option value="Code Violation">Code Violation</option>
+          <option value="Special Situation">Special Situation</option>
+          <option value="None">None</option>
+        </select>
         <span class="custom-arrow"></span>
       </div>
 
@@ -540,7 +557,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const form = document.querySelector("form");
-const successMessage = document.getElementById("gucciSuccess");
+const gucciSuccess = document.getElementById("gucciSuccess");
 const submitButton = form.querySelector("button[type='submit']");
 
 // Scroll to next input/select on change
@@ -551,16 +568,17 @@ formElements.forEach((el, index) => {
     const nextElement = formElements[index + 1];
     if (!nextElement) return;
 
-    // Smooth scroll to next element
-    nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    // DO NOT auto-focus. Just add a subtle glow or indicator.
+    // Add highlight to the next element itself, not the wrapper
     nextElement.classList.add('highlight-next');
-
-    // Remove highlight after a few seconds
     setTimeout(() => {
       nextElement.classList.remove('highlight-next');
     }, 1500);
+
+    nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    if (nextElement.tagName === 'INPUT' || nextElement.tagName === 'TEXTAREA') {
+      nextElement.focus();
+    }
   });
 });
 
