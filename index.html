@@ -362,6 +362,10 @@ textarea:hover {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.highlight-next {
+  box-shadow: 0 0 0 3px rgba(38, 152, 145, 0.6);
+  transition: box-shadow 0.3s ease;
+}
 
 </style>
 
@@ -546,17 +550,16 @@ formElements.forEach((el, index) => {
     const nextElement = formElements[index + 1];
     if (!nextElement) return;
 
+    // Smooth scroll to next element
     nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    // Prevent immediate focus on <input> right after <select> to avoid keyboard glitch
-    if (el.tagName === 'SELECT' && nextElement.tagName === 'INPUT') {
-      setTimeout(() => {
-        nextElement.focus();
-      }, 400); // slight delay helps mobile stability
-    } else if (nextElement.tagName !== 'SELECT') {
-      // Safe to focus immediately on non-selects
-      nextElement.focus();
-    }
+    // DO NOT auto-focus. Just add a subtle glow or indicator.
+    nextElement.classList.add('highlight-next');
+
+    // Remove highlight after a few seconds
+    setTimeout(() => {
+      nextElement.classList.remove('highlight-next');
+    }, 1500);
   });
 });
 
