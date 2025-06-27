@@ -546,22 +546,16 @@ formElements.forEach((el, index) => {
     const nextElement = formElements[index + 1];
     if (!nextElement) return;
 
-    if (el.tagName === 'SELECT') {
+    nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // Prevent immediate focus on <input> right after <select> to avoid keyboard glitch
+    if (el.tagName === 'SELECT' && nextElement.tagName === 'INPUT') {
       setTimeout(() => {
-        nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // ❌ Don't auto-focus on select
-        if (nextElement.tagName !== 'SELECT') {
-          nextElement.focus();
-        }
-      }, 300);
-    } else {
-      nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      // ❌ Still skip focus if next element is a select
-      if (nextElement.tagName !== 'SELECT') {
         nextElement.focus();
-      }
+      }, 400); // slight delay helps mobile stability
+    } else if (nextElement.tagName !== 'SELECT') {
+      // Safe to focus immediately on non-selects
+      nextElement.focus();
     }
   });
 });
