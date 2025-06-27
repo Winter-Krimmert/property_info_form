@@ -210,46 +210,66 @@ select[multiple]::-webkit-scrollbar-thumb {
   }
 
 
-#gucciSuccess {
+.gucci-success {
   position: fixed;
-  top: 20px; /* starting position, but will be off-screen initially via opacity */
+  top: -100px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #1a1a1a;
-  color: #2ecc71;
-  padding: 1.25rem 2rem;
-  border: 1px solid #269891;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #1B4E4B, #269891);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
   font-size: 1rem;
   font-weight: 500;
-  box-shadow: 0 12px 30px rgba(38, 152, 145, 0.4);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
   z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: top 0.5s ease, opacity 0.5s ease;
+  max-width: 90%;
+  width: auto;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.4;
+  flex-wrap: nowrap;
 }
 
-#gucciSuccess.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, 0);
+.gucci-success.show {
+  top: 20px;
 }
 
 .gucci-icon {
   flex-shrink: 0;
   stroke: #2ecc71;
-  background: #111;
-  border-radius: 50%;
-  padding: 4px;
+}
+
+.gucci-message {
+  word-break: break-word;
+  white-space: normal;
+  text-align: center;
 }
 
 .gucci-text {
   flex: 1;
-  font-family: 'Inter', sans-serif;
-  color: #f2f2f2;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+#closeBanner {
+  all: unset;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  line-height: 1;
+  transition: opacity 0.3s ease;
+}
+
+#closeBanner:hover {
+  opacity: 0.7;
 }
 
 #gucciSuccess button {
