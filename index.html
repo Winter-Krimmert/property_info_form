@@ -417,7 +417,7 @@ textarea:hover {
 
       <div class="select-wrapper">
         <label for="motivation">Seller Motivation Reason</label>
-        <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" multiple required>
+        <select id="motivation" name="MNPw8KepVIFa2BB0kPxv" required>
           <option value="Pre-Forclosure">Pre-Forclosure</option>
           <option value="Divorce">Divorce</option>
           <option value="Probate">Probate</option>
@@ -571,8 +571,7 @@ form.addEventListener("submit", async (e) => {
 
   // Collect multi-select motivation options
   const motivationEl = document.getElementById("motivation");
-  const motivation = Array.from(motivationEl.selectedOptions).map(opt => opt.value);
-
+  const motivation = motivationEl.value;
   // Format asking price as number
   const askingPriceRaw = document.getElementById("askingPrice").value;
   const askingPrice = parseFloat(askingPriceRaw.replace(/,/g, ""));
