@@ -549,7 +549,13 @@ textarea.highlight-next {
       // Strip city/state/zip from the address field — only use street portion
       const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-      if (street) document.getElementById("address").value = street;
+      const addressField = document.getElementById("address");
+
+      // Only set value *after* a short delay to avoid triggering blur on mobile
+      setTimeout(() => {
+        addressField.value = street;
+        addressField.focus(); // force refocus to trigger keyboard back
+      }, 300);
       if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
       if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
       if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
