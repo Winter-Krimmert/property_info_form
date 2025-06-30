@@ -484,9 +484,23 @@ textarea.highlight-next {
       </select>
 
 
-      <label for="address">Property Address</label>
-      <input type="text" id="address" name="L6uSX4OaJwa4ySXEhAmt" placeholder="1234 Main St" required />
+      <!-- Visible field for user typing + autocomplete -->
+      <label for="addressProxy">Property Address</label>
+      <input
+        type="text"
+        id="addressProxy"
+        placeholder="1234 Main St"
+        autocomplete="off"
+        required
+      />
 
+      <!-- Hidden field for actual form submission -->
+      <input
+        type="hidden"
+        id="address"
+        name="L6uSX4OaJwa4ySXEhAmt"
+      />
+      
       <label for="city">City</label>
       <input type="text" id="city" name="sYja8k34jfpwGyDwi5Bu" placeholder="New York" required />
 
@@ -519,8 +533,11 @@ textarea.highlight-next {
 
 <script>
   function initAutocomplete() {
-    const input = document.getElementById("address");
-    const autocomplete = new google.maps.places.Autocomplete(input, {
+    const proxyInput = document.getElementById("addressProxy");
+    const realInput = document.getElementById("address");
+
+    // Attach autocomplete to proxy input
+    const autocomplete = new google.maps.places.Autocomplete(proxyInput, {
       types: ["address"],
       componentRestrictions: { country: "us" }
     });
@@ -546,17 +563,20 @@ textarea.highlight-next {
         if (types.includes("postal_code")) addressComponents.zip = component.long_name;
       });
 
-      // Strip city/state/zip from the address field — only use street portion
       const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-      // Don't overwrite address if user is still typing
-      const addressField = document.getElementById("address");
-      if (!addressField.matches(":focus")) {
-        addressField.value = street;
-      }
-      if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
-      if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
-      if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
+      // Fill in the visible input (proxy) and the real one
+      proxyInput.value = street;
+      realInput.value = street;
+
+      document.getElementById("city").value = addressComponents.city || "";
+      document.getElementById("state").value = addressComponents.state || "";
+      document.getElementById("zipcode").value = addressComponents.zip || "";
+
+      // Optional: manually refocus to keep keyboard up
+      setTimeout(() => {
+        proxyInput.focus();
+      }, 200);
     });
   }
 
