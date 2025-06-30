@@ -484,17 +484,8 @@ textarea.highlight-next {
       </select>
 
 
-      <label for="addressInput">Property Address</label>
-      <input
-        type="text"
-        id="addressInput"
-        placeholder="1234 Main St"
-        autocomplete="off"
-        required
-      />
-
-      <!-- Hidden fields to store actual parsed values -->
-      <input type="hidden" id="address" name="L6uSX4OaJwa4ySXEhAmt" />
+      <label for="address">Property Address</label>
+      <input type="text" id="address" name="L6uSX4OaJwa4ySXEhAmt" placeholder="1234 Main St" required />
 
       <label for="city">City</label>
       <input type="text" id="city" name="sYja8k34jfpwGyDwi5Bu" placeholder="New York" required />
@@ -527,62 +518,56 @@ textarea.highlight-next {
   </div>
 
 <script>
-  function initAutocomplete() {
-    const userInput = document.getElementById("addressInput");
-    const hiddenAddress = document.getElementById("address");
+function initAutocomplete() {
+  const input = document.getElementById("address");
 
-    const autocomplete = new google.maps.places.Autocomplete(userInput, {
-      types: ["address"],
-      componentRestrictions: { country: "us" }
+  // Use Google's autocomplete but override default behavior
+  const autocomplete = new google.maps.places.Autocomplete(input, {
+    types: ["address"],
+    componentRestrictions: { country: "us" }
+  });
+
+  // ✅ Prevent keyboard from closing: capture tap & wait to set value
+  autocomplete.addListener("place_changed", () => {
+    const place = autocomplete.getPlace();
+    if (!place || !place.address_components) return;
+
+    const addressComponents = {
+      street_number: "",
+      route: "",
+      city: "",
+      state: "",
+      zip: ""
+    };
+
+    place.address_components.forEach(component => {
+      const types = component.types;
+      if (types.includes("street_number")) addressComponents.street_number = component.long_name;
+      if (types.includes("route")) addressComponents.route = component.long_name;
+      if (types.includes("locality")) addressComponents.city = component.long_name;
+      if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
+      if (types.includes("postal_code")) addressComponents.zip = component.long_name;
     });
 
-    // Prevent autocomplete from firing too early
-    google.maps.event.addDomListener(userInput, "keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault(); // prevent form submission
-      }
-    });
+    const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      if (!place.address_components) return;
+    // ✅ Delay setting input value slightly to prevent blur
+    setTimeout(() => {
+      input.value = street;
 
-      const addressComponents = {
-        street_number: "",
-        route: "",
-        city: "",
-        state: "",
-        zip: ""
-      };
+      // Refocus the field to reopen the keyboard
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }, 200); // <== this is the magic delay
 
-      place.address_components.forEach(component => {
-        const types = component.types;
-        if (types.includes("street_number")) addressComponents.street_number = component.long_name;
-        if (types.includes("route")) addressComponents.route = component.long_name;
-        if (types.includes("locality")) addressComponents.city = component.long_name;
-        if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
-        if (types.includes("postal_code")) addressComponents.zip = component.long_name;
-      });
+    // Fill in other fields normally
+    document.getElementById("city").value = addressComponents.city;
+    document.getElementById("state").value = addressComponents.state;
+    document.getElementById("zipcode").value = addressComponents.zip;
+  });
+}
 
-      const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
-
-      // Set parsed value into hidden input only
-      hiddenAddress.value = street;
-
-      // Also update city/state/zip
-      document.getElementById("city").value = addressComponents.city || "";
-      document.getElementById("state").value = addressComponents.state || "";
-      document.getElementById("zipcode").value = addressComponents.zip || "";
-
-      // ✅ Ensure keyboard stays by re-focusing the input
-      setTimeout(() => {
-        userInput.focus();
-        userInput.setSelectionRange(userInput.value.length, userInput.value.length); // move cursor to end
-      }, 100);
-    });
-  }
-
-  window.addEventListener("load", initAutocomplete);
+window.addEventListener("load", initAutocomplete);
 </script>
 
 
