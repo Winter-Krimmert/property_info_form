@@ -549,7 +549,11 @@ textarea.highlight-next {
       // Strip city/state/zip from the address field — only use street portion
       const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-      if (street) document.getElementById("address").value = street;
+      // Don't overwrite address if user is still typing
+      const addressField = document.getElementById("address");
+      if (!addressField.matches(":focus")) {
+        addressField.value = street;
+      }
       if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
       if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
       if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
