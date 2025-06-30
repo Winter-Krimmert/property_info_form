@@ -518,56 +518,42 @@ textarea.highlight-next {
   </div>
 
 <script>
-function initAutocomplete() {
-  const input = document.getElementById("address");
+autocomplete.addListener("place_changed", () => {
+  const place = autocomplete.getPlace();
+  if (!place.address_components) return;
 
-  // Use Google's autocomplete but override default behavior
-  const autocomplete = new google.maps.places.Autocomplete(input, {
-    types: ["address"],
-    componentRestrictions: { country: "us" }
+  const addressComponents = {
+    street_number: "",
+    route: "",
+    city: "",
+    state: "",
+    zip: ""
+  };
+
+  place.address_components.forEach(component => {
+    const types = component.types;
+    if (types.includes("street_number")) addressComponents.street_number = component.long_name;
+    if (types.includes("route")) addressComponents.route = component.long_name;
+    if (types.includes("locality")) addressComponents.city = component.long_name;
+    if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
+    if (types.includes("postal_code")) addressComponents.zip = component.long_name;
   });
 
-  // ✅ Prevent keyboard from closing: capture tap & wait to set value
-  autocomplete.addListener("place_changed", () => {
-    const place = autocomplete.getPlace();
-    if (!place || !place.address_components) return;
+  const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-    const addressComponents = {
-      street_number: "",
-      route: "",
-      city: "",
-      state: "",
-      zip: ""
-    };
+  document.getElementById("address").value = street;
+  document.getElementById("city").value = addressComponents.city || "";
+  document.getElementById("state").value = addressComponents.state || "";
+  document.getElementById("zipcode").value = addressComponents.zip || "";
 
-    place.address_components.forEach(component => {
-      const types = component.types;
-      if (types.includes("street_number")) addressComponents.street_number = component.long_name;
-      if (types.includes("route")) addressComponents.route = component.long_name;
-      if (types.includes("locality")) addressComponents.city = component.long_name;
-      if (types.includes("administrative_area_level_1")) addressComponents.state = component.short_name;
-      if (types.includes("postal_code")) addressComponents.zip = component.long_name;
-    });
-
-    const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
-
-    // ✅ Delay setting input value slightly to prevent blur
-    setTimeout(() => {
-      input.value = street;
-
-      // Refocus the field to reopen the keyboard
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-    }, 200); // <== this is the magic delay
-
-    // Fill in other fields normally
-    document.getElementById("city").value = addressComponents.city;
-    document.getElementById("state").value = addressComponents.state;
-    document.getElementById("zipcode").value = addressComponents.zip;
-  });
-}
-
-window.addEventListener("load", initAutocomplete);
+  // ✅ Smooth scroll & highlight like the rest of your form
+  const nextField = document.getElementById("city");
+  nextField.classList.add("highlight-next");
+  nextField.scrollIntoView({ behavior: "smooth", block: "center" });
+  setTimeout(() => {
+    nextField.classList.remove("highlight-next");
+  }, 1500);
+});
 </script>
 
 
