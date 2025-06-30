@@ -484,8 +484,17 @@ textarea.highlight-next {
       </select>
 
 
-      <label for="address">Property Address</label>
-      <input type="text" id="address" name="L6uSX4OaJwa4ySXEhAmt" placeholder="1234 Main St" required />
+      <label for="addressInput">Property Address</label>
+      <input
+        type="text"
+        id="addressInput"
+        placeholder="1234 Main St"
+        autocomplete="off"
+        required
+      />
+
+      <!-- Hidden fields to store actual parsed values -->
+      <input type="hidden" id="address" name="L6uSX4OaJwa4ySXEhAmt" />
 
       <label for="city">City</label>
       <input type="text" id="city" name="sYja8k34jfpwGyDwi5Bu" placeholder="New York" required />
@@ -519,10 +528,19 @@ textarea.highlight-next {
 
 <script>
   function initAutocomplete() {
-    const input = document.getElementById("address");
-    const autocomplete = new google.maps.places.Autocomplete(input, {
+    const userInput = document.getElementById("addressInput");
+    const hiddenAddress = document.getElementById("address");
+
+    const autocomplete = new google.maps.places.Autocomplete(userInput, {
       types: ["address"],
       componentRestrictions: { country: "us" }
+    });
+
+    // Prevent autocomplete from firing too early
+    google.maps.event.addDomListener(userInput, "keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault(); // prevent form submission
+      }
     });
 
     autocomplete.addListener("place_changed", () => {
@@ -546,19 +564,21 @@ textarea.highlight-next {
         if (types.includes("postal_code")) addressComponents.zip = component.long_name;
       });
 
-      // Strip city/state/zip from the address field — only use street portion
       const street = `${addressComponents.street_number} ${addressComponents.route}`.trim();
 
-      const addressField = document.getElementById("address");
+      // Set parsed value into hidden input only
+      hiddenAddress.value = street;
 
-      // Only set value *after* a short delay to avoid triggering blur on mobile
+      // Also update city/state/zip
+      document.getElementById("city").value = addressComponents.city || "";
+      document.getElementById("state").value = addressComponents.state || "";
+      document.getElementById("zipcode").value = addressComponents.zip || "";
+
+      // ✅ Ensure keyboard stays by re-focusing the input
       setTimeout(() => {
-        addressField.value = street;
-        addressField.focus(); // force refocus to trigger keyboard back
-      }, 300);
-      if (addressComponents.city) document.getElementById("city").value = addressComponents.city;
-      if (addressComponents.state) document.getElementById("state").value = addressComponents.state;
-      if (addressComponents.zip) document.getElementById("zipcode").value = addressComponents.zip;
+        userInput.focus();
+        userInput.setSelectionRange(userInput.value.length, userInput.value.length); // move cursor to end
+      }, 100);
     });
   }
 
