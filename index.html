@@ -535,7 +535,10 @@ textarea.highlight-next {
     const input = document.getElementById("address");
     const autocomplete = new google.maps.places.Autocomplete(input, {
       types: ["address"],
-      componentRestrictions: { country: "us" }
+      componentRestrictions: { country: "us" },
+      // Only the address is read below. Without a field list Google bills for every
+      // field, including contact/atmosphere data (2026-10-09 billing audit).
+      fields: ["address_components"]
     });
 
     autocomplete.addListener("place_changed", () => {
